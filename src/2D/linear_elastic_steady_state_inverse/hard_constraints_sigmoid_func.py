@@ -7,15 +7,15 @@ dde.config.set_default_float("float64")
 dde.config.disable_xla_jit()
 
 
-def gen_data(num):
+def gen_data_m1(num):
 
-    data = pd.read_csv("linearElasticDisp_fea.csv")
+    data = pd.read_csv("FEA/linearElasticDisp_fea_m1.csv")
     X = data["x"].values.flatten()[:, None]
     Y = data["y"].values.flatten()[:, None]
     ux = data["ux"].values.flatten()[:, None]
     uy = data["uy"].values.flatten()[:, None]
 
-    data = pd.read_csv("linearElasticCauchyStress_fea.csv")
+    data = pd.read_csv("FEA/linearElasticCauchyStress_fea_m1.csv")
     sxx = data["sxx"].values.flatten()[:, None]
     syy = data["syy"].values.flatten()[:, None]
     sxy = data["sxy"].values.flatten()[:, None]
@@ -33,7 +33,6 @@ def gen_data(num):
 
     samplingRegion1 = X_star[:, 0] <= 1
     idx1 = np.where(samplingRegion1)[0]
-    # print(idx1.shape[0])
     if idx1.shape[0] < num:
         idx1 = idx1
         num = int(num * 2 - idx1.shape[0])
@@ -66,12 +65,76 @@ def gen_data(num):
     return XY_star, ux_star, uy_star, sxx_star, syy_star, sxy_star
 
 
+def gen_data_m2():
+
+    data = pd.read_csv("FEA/linearElasticDisp_fea_m2.csv")
+    X = data["x"].values.flatten()[:, None]
+    Y = data["y"].values.flatten()[:, None]
+    ux = data["ux"].values.flatten()[:, None]
+    uy = data["uy"].values.flatten()[:, None]
+
+    data = pd.read_csv("FEA/linearElasticCauchyStress_fea_m2.csv")
+    sxx = data["sxx"].values.flatten()[:, None]
+    syy = data["syy"].values.flatten()[:, None]
+    sxy = data["sxy"].values.flatten()[:, None]
+    syx = data["sxy"].values.flatten()[:, None]
+
+    XY_star = np.hstack((X.flatten()[:, None], Y.flatten()[:, None]))
+
+    ux_star = ux.flatten()[:, None]
+    uy_star = uy.flatten()[:, None]
+    sxx_star = sxx.flatten()[:, None]
+    syy_star = syy.flatten()[:, None]
+    sxy_star = sxy.flatten()[:, None]
+
+    return XY_star, ux_star, uy_star, sxx_star, syy_star, sxy_star
+
+
+def gen_data_m3():
+
+    data = pd.read_csv("FEA/linearElasticDisp_fea_m3.csv")
+    X = data["x"].values.flatten()[:, None]
+    Y = data["y"].values.flatten()[:, None]
+    ux = data["ux"].values.flatten()[:, None]
+    uy = data["uy"].values.flatten()[:, None]
+
+    data = pd.read_csv("FEA/linearElasticCauchyStress_fea_m3.csv")
+    sxx = data["sxx"].values.flatten()[:, None]
+    syy = data["syy"].values.flatten()[:, None]
+    sxy = data["sxy"].values.flatten()[:, None]
+    syx = data["sxy"].values.flatten()[:, None]
+
+    X_star = np.hstack((X.flatten()[:, None], Y.flatten()[:, None]))
+
+    ux = ux.flatten()[:, None]
+    uy = uy.flatten()[:, None]
+    sxx = sxx.flatten()[:, None]
+    syy = syy.flatten()[:, None]
+    sxy = sxy.flatten()[:, None]
+
+    ind1 = np.where((X_star[:, 0] == 0))[0]
+    ind2 = np.where((X_star[:, 0] == 10))[0]
+    ind3 = np.where((X_star[:, 1] == 0))[0]
+    ind4 = np.where((X_star[:, 1] == 1))[0]
+
+    XY_star = np.vstack((X_star[ind1], X_star[ind2], X_star[ind3], X_star[ind4]))
+    ux_star = np.vstack((ux[ind1], ux[ind2], ux[ind3], ux[ind4]))
+    uy_star = np.vstack((uy[ind1], uy[ind2], uy[ind3], uy[ind4]))
+    sxx_star = np.vstack((sxx[ind1], sxx[ind2], sxx[ind3], sxx[ind4]))
+    syy_star = np.vstack((syy[ind1], syy[ind2], syy[ind3], syy[ind4]))
+    sxy_star = np.vstack((sxy[ind1], sxy[ind2], sxy[ind3], sxy[ind4]))
+
+    return XY_star, ux_star, uy_star, sxx_star, syy_star, sxy_star
+
+
 def main():
 
     E_ = dde.Variable(1.0)
     nu_ = dde.Variable(1.0)
     rho_g = 1
-    observe_xy, ux, uy, sxx, syy, sxy = gen_data(250)
+    observe_xy, ux, uy, sxx, syy, sxy = gen_data_m1(250)
+    # observe_xy, ux, uy, sxx, syy, sxy = gen_data_m2()
+    # observe_xy, ux, uy, sxx, syy, sxy = gen_data_m3()
 
     def pde(x, f):
         """
@@ -122,12 +185,6 @@ def main():
 
     geom = dde.geometry.Rectangle([0, 0], [10, 1])
 
-    def left_boundary(x, on_boundary):
-        return on_boundary and np.isclose(x[0], 0)
-
-    bc_l1 = dde.DirichletBC(geom, lambda x: 0, left_boundary, component=0)
-    bc_l2 = dde.DirichletBC(geom, lambda x: 0, left_boundary, component=1)
-
     observe_ux = dde.PointSetBC(observe_xy, ux, component=0)
     observe_uy = dde.PointSetBC(observe_xy, uy, component=1)
     observe_sxx = dde.PointSetBC(observe_xy, sxx, component=2)
@@ -137,7 +194,7 @@ def main():
     data = dde.data.PDE(
         geom,
         pde,
-        [bc_l1, bc_l2, observe_ux, observe_uy, observe_sxx, observe_syy, observe_sxy],
+        [observe_ux, observe_uy, observe_sxx, observe_syy, observe_sxy],
         num_domain=100,
         num_boundary=50,
         num_test=100,
@@ -159,6 +216,9 @@ def main():
             f[:, 4:5],
         )
 
+        Nux = (tf.math.sigmoid(x[:, 0:1]) - 0.5) * 2 * Nux
+        Nuy = (tf.math.sigmoid(x[:, 0:1]) - 0.5) * 2 * Nuy
+
         return tf.concat(
             [
                 Nux * np.max(np.abs(ux)),
@@ -173,9 +233,7 @@ def main():
     net.apply_output_transform(output_transform)
     model = dde.Model(data, net)
     model.compile(
-        "adam",
-        lr=1e-3,
-        loss_weights=[1e-10, 1e-10, 1e-10, 1e-10, 1e-10, 1, 1, 1, 1, 1, 1, 1],
+        "adam", lr=1e-3, loss_weights=[1e-10, 1e-10, 1e-10, 1e-10, 1e-10, 1, 1, 1, 1, 1]
     )
     variable = dde.callbacks.VariableValue(
         [E_, nu_], period=1000, filename="2D_elastic_static_variables.dat"
