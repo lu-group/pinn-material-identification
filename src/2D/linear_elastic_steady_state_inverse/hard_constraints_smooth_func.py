@@ -9,13 +9,13 @@ dde.config.disable_xla_jit()
 
 def gen_data(num):
 
-    data = pd.read_csv("linearElasticDisp_fea.csv")
+    data = pd.read_csv("FEA/linearElasticDisp_fea.csv")
     X = data["x"].values.flatten()[:, None]
     Y = data["y"].values.flatten()[:, None]
     ux = data["ux"].values.flatten()[:, None]
     uy = data["uy"].values.flatten()[:, None]
 
-    data = pd.read_csv("linearElasticCauchyStress_fea.csv")
+    data = pd.read_csv("FEA/linearElasticCauchyStress_fea.csv")
     sxx = data["sxx"].values.flatten()[:, None]
     syy = data["syy"].values.flatten()[:, None]
     sxy = data["sxy"].values.flatten()[:, None]
@@ -42,7 +42,7 @@ def gen_data(num):
     samplingRegion2 = X_star[:, 0] > 1
     idx2 = np.random.choice(np.where(samplingRegion2)[0], num, replace=False)
 
-    nb = 11
+    nb = 10
     b1 = X_star[:, 0] == 10
     idx3 = np.random.choice(np.where(b1)[0], nb, replace=False)
 
