@@ -9,13 +9,13 @@ dde.config.disable_xla_jit()
 
 def gen_data(num):
 
-    data = pd.read_csv("linearElasticDisp_fea.csv")
+    data = pd.read_csv("FEA/linearElasticDisp_fea_m1.csv")
     X = data["x"].values.flatten()[:, None]
     Y = data["y"].values.flatten()[:, None]
     ux = data["ux"].values.flatten()[:, None]
     uy = data["uy"].values.flatten()[:, None]
 
-    data = pd.read_csv("linearElasticCauchyStress_fea.csv")
+    data = pd.read_csv("FEA/linearElasticCauchyStress_fea_m1.csv")
     sxx = data["sxx"].values.flatten()[:, None]
     syy = data["syy"].values.flatten()[:, None]
     sxy = data["sxy"].values.flatten()[:, None]

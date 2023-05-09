@@ -18,8 +18,10 @@ All data and code are in the folder [src](src). The code depends on the deep lea
         - [Soft constraints](src/2D/linear_elastic_steady_state_inverse/soft_constraints.py)
         - [Hard constraints with a discontinuous function](src/2D/linear_elastic_steady_state_inverse/hard_constraints_discontinous_func.py)
         - [Hard constraints with a smooth function](src/2D/linear_elastic_steady_state_inverse/hard_constraints_smooth_func.py)
+        - [Finite element results](src/2D/linear_elastic_steady_state_inverse/FEA)
     - Time-independent with hyperelastic material
         - [Hard constraints with a discontinuous function](src/2D/hyperelastic_steady_state_inverse/hard_constraints_discontinous_func.py)
+        - [Finite element results](src/2D/hyperelastic_steady_state_inverse/FEA)
     - Time-dependent with linear elastic material
         - [Hard constraints with a discontinuous function](src/2D/linear_elastic_dynamics_inverse/hard_constraints_discontinous_func.py)
 
