@@ -43,7 +43,7 @@ def gen_data(num):
     samplingRegion2 = X_star[:, 0] > 1
     idx2 = np.random.choice(np.where(samplingRegion2)[0], num, replace=False)
 
-    nb = 10
+    nb = 11
     b1 = X_star[:, 0] == 10
     idx3 = np.random.choice(np.where(b1)[0], nb, replace=False)
 

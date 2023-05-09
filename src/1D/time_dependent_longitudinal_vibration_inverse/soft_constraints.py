@@ -24,11 +24,9 @@ def gen_data():
     idx3 = np.random.choice(np.where(b3)[0], nb, replace=False)
     b4 = xt[:, 1] == 1
     idx4 = np.random.choice(np.where(b4)[0], nb, replace=False)
-
     bc_idx = np.hstack((idx1, idx2, idx3, idx4))
-    bc_total = np.hstack((b1, b2, b3, b4))
 
-    interior = np.setdiff1d(np.arange(0, 10000, 1), bc_total)
+    interior = np.setdiff1d(np.arange(0, 10000, 1), bc_idx)
     idx5 = np.random.choice(np.where(interior)[0], nd, replace=False)
 
     XT = np.vstack((xt[bc_idx], xt[idx5]))
@@ -88,10 +86,10 @@ def main():
         geomtime,
         pde,
         [bc_l1, bc_r1, ic1, ic2, observe_u],
-        num_domain=20,
-        num_boundary=10,
-        num_initial=10,
-        num_test=10,
+        num_domain=100,
+        num_boundary=50,
+        num_initial=50,
+        num_test=50,
     )
 
     net = dde.nn.FNN([2] + 3 * [50] + [1], "tanh", "Glorot normal")

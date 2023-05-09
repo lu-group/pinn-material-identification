@@ -9,13 +9,13 @@ dde.config.disable_xla_jit()
 
 def gen_data_m1(num):
 
-    data = pd.read_csv("FEA/linearElasticDisp_fea_m1.csv")
+    data = pd.read_csv("linearElasticDisp_fea.csv")
     X = data["x"].values.flatten()[:, None]
     Y = data["y"].values.flatten()[:, None]
     ux = data["ux"].values.flatten()[:, None]
     uy = data["uy"].values.flatten()[:, None]
 
-    data = pd.read_csv("FEA/linearElasticCauchyStress_fea_m1.csv")
+    data = pd.read_csv("linearElasticCauchyStress_fea.csv")
     sxx = data["sxx"].values.flatten()[:, None]
     syy = data["syy"].values.flatten()[:, None]
     sxy = data["sxy"].values.flatten()[:, None]
@@ -42,7 +42,7 @@ def gen_data_m1(num):
     samplingRegion2 = X_star[:, 0] > 1
     idx2 = np.random.choice(np.where(samplingRegion2)[0], num, replace=False)
 
-    nb = 10
+    nb = 11
     b1 = X_star[:, 0] == 10
     idx3 = np.random.choice(np.where(b1)[0], nb, replace=False)
 
@@ -65,40 +65,60 @@ def gen_data_m1(num):
     return XY_star, ux_star, uy_star, sxx_star, syy_star, sxy_star
 
 
-def gen_data_m2():
+def gen_data_m2(num):
 
-    data = pd.read_csv("FEA/linearElasticDisp_fea_m2.csv")
+    data = pd.read_csv("linearElasticDisp_fea.csv")
     X = data["x"].values.flatten()[:, None]
     Y = data["y"].values.flatten()[:, None]
     ux = data["ux"].values.flatten()[:, None]
     uy = data["uy"].values.flatten()[:, None]
 
-    data = pd.read_csv("FEA/linearElasticCauchyStress_fea_m2.csv")
+    data = pd.read_csv("linearElasticCauchyStress_fea.csv")
     sxx = data["sxx"].values.flatten()[:, None]
     syy = data["syy"].values.flatten()[:, None]
     sxy = data["sxy"].values.flatten()[:, None]
     syx = data["sxy"].values.flatten()[:, None]
 
-    XY_star = np.hstack((X.flatten()[:, None], Y.flatten()[:, None]))
+    X_star = np.hstack((X.flatten()[:, None], Y.flatten()[:, None]))
 
-    ux_star = ux.flatten()[:, None]
-    uy_star = uy.flatten()[:, None]
-    sxx_star = sxx.flatten()[:, None]
-    syy_star = syy.flatten()[:, None]
-    sxy_star = sxy.flatten()[:, None]
+    ux = ux.flatten()[:, None]
+    uy = uy.flatten()[:, None]
+    sxx = sxx.flatten()[:, None]
+    syy = syy.flatten()[:, None]
+    sxy = sxy.flatten()[:, None]
+
+    num = np.linspace(0, 10, 10 * num + 1)
+    for i in num:
+        if i == 0:
+            ii = np.where((X_star[:, 0] == i))[0]
+            XY_star = np.hstack((X.flatten()[ii, None], Y.flatten()[ii, None]))
+            ux_star = ux.flatten()[ii, None]
+            uy_star = uy.flatten()[ii, None]
+            sxx_star = sxx.flatten()[ii, None]
+            syy_star = syy.flatten()[ii, None]
+            sxy_star = sxy.flatten()[ii, None]
+        else:
+            ii = np.where((X_star[:, 0] == i))[0]
+            X_new = np.hstack((X.flatten()[ii, None], Y.flatten()[ii, None]))
+            XY_star = np.vstack((XY_star, X_new))
+            ux_star = np.vstack((ux_star, ux.flatten()[ii, None]))
+            uy_star = np.vstack((uy_star, uy.flatten()[ii, None]))
+            sxx_star = np.vstack((sxx_star, sxx.flatten()[ii, None]))
+            syy_star = np.vstack((syy_star, syy.flatten()[ii, None]))
+            sxy_star = np.vstack((sxy_star, sxy.flatten()[ii, None]))
 
     return XY_star, ux_star, uy_star, sxx_star, syy_star, sxy_star
 
 
 def gen_data_m3():
 
-    data = pd.read_csv("FEA/linearElasticDisp_fea_m3.csv")
+    data = pd.read_csv("linearElasticDisp_fea.csv")
     X = data["x"].values.flatten()[:, None]
     Y = data["y"].values.flatten()[:, None]
     ux = data["ux"].values.flatten()[:, None]
     uy = data["uy"].values.flatten()[:, None]
 
-    data = pd.read_csv("FEA/linearElasticCauchyStress_fea_m3.csv")
+    data = pd.read_csv("linearElasticCauchyStress_fea.csv")
     sxx = data["sxx"].values.flatten()[:, None]
     syy = data["syy"].values.flatten()[:, None]
     sxy = data["sxy"].values.flatten()[:, None]
@@ -133,7 +153,7 @@ def main():
     nu_ = dde.Variable(1.0)
     rho_g = 1
     observe_xy, ux, uy, sxx, syy, sxy = gen_data_m1(250)
-    # observe_xy, ux, uy, sxx, syy, sxy = gen_data_m2()
+    # observe_xy, ux, uy, sxx, syy, sxy = gen_data_m2(1)
     # observe_xy, ux, uy, sxx, syy, sxy = gen_data_m3()
 
     def pde(x, f):
@@ -144,9 +164,9 @@ def main():
         f: Network output
         f[:,0] is Nux
         f[:,1] is Nuy
-        f[:,2] is Nsxx
-        f[:,3] is Nsyy
-        f[:,4] is Nsxy
+        f[:,2] is NSxx
+        f[:,3] is NSyy
+        f[:,4] is NSxy
         """
         Nux, Nuy = f[:, 0:1], f[:, 1:2]
 
