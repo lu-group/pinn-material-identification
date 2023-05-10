@@ -31,11 +31,11 @@ If you use this data or code for academic research, you are encouraged to cite t
 
 ```
 @article{wu2022materialidentification,
-  title={Effective data sampling strategies and boundary condition constraints of physics-informed neural networks for identifying material properties in solid mechanics}, 
-  author={Wensi Wu and Mitchell Daneker and Matthew A. Jolley and Kevin T. Turner and Lu Lu},
-  year={2022},
-  eprint={2211.15423},
-  archivePrefix={arXiv}
+  title         = {Effective data sampling strategies and boundary condition constraints of physics-informed neural networks for identifying material properties in solid mechanics}, 
+  author        = {Wensi Wu and Mitchell Daneker and Matthew A. Jolley and Kevin T. Turner and Lu Lu},
+  year          = {2022},
+  eprint        = {2211.15423},
+  archivePrefix = {arXiv}
 }
 ```
 
