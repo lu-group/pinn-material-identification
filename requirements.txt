@@ -1,8 +1,4 @@
 deepxde
-matplotlib
 numpy
+pandas
 scipy
-sklearn
-tensorflow
-tensorflow_addons
-torch
