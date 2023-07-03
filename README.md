@@ -36,7 +36,7 @@ If you use this data or code for academic research, you are encouraged to cite t
   Journal = {Applied Mathematics and Mechanics},
   Volume  = {44}, 
   issue   = {7},
-  pages   = {1039},
+  pages   = {1039-1068},
   year    = {2023},
   doi     = {10.1007/s10483-023-2995-8}
 }
