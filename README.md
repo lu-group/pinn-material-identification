@@ -1,6 +1,6 @@
 # Physics-informed neural networks for material identification
 
-The data and code for the paper [W. Wu, M. Daneker, M. A. Jolley, K. T. Turner, & L. Lu. Effective data sampling strategies and boundary condition constraints of physics-informed neural networks for identifying material properties in solid mechanics. *arXiv preprint arXiv:2211.15423*, 2022](https://arxiv.org/abs/2211.15423).
+The data and code for the paper [W. Wu, M. Daneker, M. A. Jolley, K. T. Turner, & L. Lu. Effective data sampling strategies and boundary condition constraints of physics-informed neural networks for identifying material properties in solid mechanics. *Applied Mathematics and Mechanics, 44(7), 1039–1068*, 2023](https://doi.org/10.1007/s10483-023-2995-8).
 
 ## Code
 
@@ -31,14 +31,14 @@ If you use this data or code for academic research, you are encouraged to cite t
 
 ```
 @article{wu2022materialidentification,
-  title={Effective data sampling strategies and boundary condition constraints of physics-informed neural networks for identifying material properties in solid mechanics}, 
-  author={Wensi Wu and Mitchell Daneker and Matthew A. Jolley and Kevin T. Turner and Lu Lu},
+  title   = {Effective data sampling strategies and boundary condition constraints of physics-informed neural networks for identifying material properties in solid mechanics}, 
+  author  = {Wensi Wu and Mitchell Daneker and Matthew A. Jolley and Kevin T. Turner and Lu Lu},
   Journal = {Applied Mathematics and Mechanics},
-  Volume = {44}, 
-  issue = {7},
-  pages = {1039},
-  year={2023},
-  doi={10.1007/s10483-023-2995-8}
+  Volume  = {44}, 
+  issue   = {7},
+  pages   = {1039},
+  year    = {2023},
+  doi     = {10.1007/s10483-023-2995-8}
 }
 ```
 
